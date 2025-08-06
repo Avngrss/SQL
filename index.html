@@ -255,6 +255,16 @@
                 <li><span class="sql-keyword">DROP TABLE</span> employees;</li>
             </ul>
         </div>
+        <div class="card mb-4 p-4 shadow-sm">
+            <h2>Data definition language commands: MODIFY COLUMN/DROP COLUMN/RENAME COLUMN (TABLE, DB)</h2>
+            <p>MODIFY, DROP, RENAME — команды для изменения и удаления столбцов из таблицы</p>
+            <p>Примеры:</p>
+            <ul class="mb-0">
+                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">MODIFY</span> name VARCHAR(255);</li>
+                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">DROP COLUMN</span>temp_notes;</li>
+                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">RENAME COLUMN </span>name TO full_name;</li>
+            </ul>
+        </div>
     </div>
     <!-- Bootstrap JS (optional, for interactivity) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
