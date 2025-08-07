@@ -1,272 +1,559 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SQL for Advanced</title>
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <style>
-        body {
-            background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
-        }
+      body {
+        background: linear-gradient(120deg, #f8fafc 0%, #e0e7ef 100%);
+      }
+      .container {
+        font-size: 1.08rem;
+        line-height: 1.7;
+        color: #2d3748;
+      }
+      .card {
+        border-radius: 1rem;
+        transition: box-shadow 0.2s, transform 0.2s;
+        background: #fff;
+      }
+      .card:hover {
+        box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12),
+          0 1.5px 6px rgba(44, 62, 80, 0.08);
+        transform: translateY(-2px) scale(1.01);
+      }
+      h2 {
+        color: #1a237e;
+        font-weight: 700;
+        font-size: 1.6rem;
+        margin-bottom: 1rem;
+      }
+      p {
+        margin-bottom: 0.7rem;
+      }
+      ul.list-group {
+        margin-bottom: 1rem !important;
+      }
+      ul.mb-0,
+      ul:not(.list-group) {
+        padding-left: 1.2rem;
+        margin-bottom: 0.7rem;
+      }
+      li {
+        margin-bottom: 0.3rem;
+      }
+      /* Стили для SQL-примеров */
+      ul.mb-0 li,
+      ul:not(.list-group) li {
+        font-family: "Fira Mono", "Consolas", "Menlo", monospace;
+        background: #f4f6fa;
+        border-radius: 0.4em;
+        padding: 0.3em 0.7em;
+        color: #374151;
+        font-size: 1.01em;
+        margin-bottom: 0.4em;
+        border: 1px solid #e3e8ee;
+      }
+      /* Стили для обычных списков */
+      .list-group-item {
+        background: transparent;
+        border: none;
+        padding-left: 0;
+        color: #374151;
+        font-size: 1.04em;
+      }
+      /* SQL keywords and functions */
+      .sql-keyword {
+        font-family: "Fira Mono", "Consolas", "Menlo", monospace;
+        font-weight: bold;
+        color: #512da8;
+        background: #e8eaf6;
+        border-radius: 0.2em;
+        padding: 0 0.18em;
+        letter-spacing: 0.5px;
+      }
+      /* Responsive для мобильных */
+      @media (max-width: 600px) {
         .container {
-            font-size: 1.08rem;
-            line-height: 1.7;
-            color: #2d3748;
-        }
-        .card {
-            border-radius: 1rem;
-            transition: box-shadow 0.2s, transform 0.2s;
-            background: #fff;
-        }
-        .card:hover {
-            box-shadow: 0 8px 32px rgba(44, 62, 80, 0.12), 0 1.5px 6px rgba(44, 62, 80, 0.08);
-            transform: translateY(-2px) scale(1.01);
+          font-size: 0.98rem;
+          padding: 0 0.2rem;
         }
         h2 {
-            color: #1a237e;
-            font-weight: 700;
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
+          font-size: 1.15rem;
         }
-        p {
-            margin-bottom: 0.7rem;
+        .card {
+          padding: 1rem !important;
         }
-        ul.list-group {
-            margin-bottom: 1rem !important;
-        }
-        ul.mb-0, ul:not(.list-group) {
-            padding-left: 1.2rem;
-            margin-bottom: 0.7rem;
-        }
-        li {
-            margin-bottom: 0.3rem;
-        }
-        /* Стили для SQL-примеров */
-        ul.mb-0 li, ul:not(.list-group) li {
-            font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-            background: #f4f6fa;
-            border-radius: 0.4em;
-            padding: 0.3em 0.7em;
-            color: #374151;
-            font-size: 1.01em;
-            margin-bottom: 0.4em;
-            border: 1px solid #e3e8ee;
-        }
-        /* Стили для обычных списков */
-        .list-group-item {
-            background: transparent;
-            border: none;
-            padding-left: 0;
-            color: #374151;
-            font-size: 1.04em;
-        }
-        /* SQL keywords and functions */
-        .sql-keyword {
-            font-family: 'Fira Mono', 'Consolas', 'Menlo', monospace;
-            font-weight: bold;
-            color: #512da8;
-            background: #e8eaf6;
-            border-radius: 0.2em;
-            padding: 0 0.18em;
-            letter-spacing: 0.5px;
-        }
-        /* Responsive для мобильных */
-        @media (max-width: 600px) {
-            .container {
-                font-size: 0.98rem;
-                padding: 0 0.2rem;
-            }
-            h2 {
-                font-size: 1.15rem;
-            }
-            .card {
-                padding: 1rem !important;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="container my-5">
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Comparison predicates (предикаты сравнения)</h2>
-            <p>Это операторы, используемые в WHERE для сравнения значений:</p>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><span class="sql-keyword">=</span>, <span class="sql-keyword">&lt;&gt;</span> или <span class="sql-keyword">!=</span> — равно / не равно</li>
-                <li class="list-group-item"><span class="sql-keyword">&lt;</span>, <span class="sql-keyword">&gt;</span>, <span class="sql-keyword">&lt;=</span>, <span class="sql-keyword">&gt;=</span> — меньше, больше и т.д.</li>
-                <li class="list-group-item"><span class="sql-keyword">IN</span> — проверка на вхождение в список</li>
-                <li class="list-group-item"><span class="sql-keyword">BETWEEN</span> — проверка диапазона (включительно)</li>
-                <li class="list-group-item"><span class="sql-keyword">IS NULL</span> / <span class="sql-keyword">IS NOT NULL</span> — проверка на пустое значение</li>
-            </ul>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; 5000;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary <span class="sql-keyword">BETWEEN</span> 5000 <span class="sql-keyword">AND</span> 10000;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary <span class="sql-keyword">IS NULL</span>;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Logical operators (логические операторы)</h2>
-            <p>Это операторы, используемые в WHERE для логических операций:</p>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><span class="sql-keyword">AND</span> — логическое И</li>
-                <li class="list-group-item"><span class="sql-keyword">OR</span> — логическое ИЛИ</li>
-                <li class="list-group-item"><span class="sql-keyword">NOT</span> — логическое НЕ</li>
-            </ul>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; 5000 <span class="sql-keyword">AND</span> salary &lt; 10000;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; 5000 <span class="sql-keyword">OR</span> salary &lt; 10000;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE NOT</span> salary &gt; 5000;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Checking for substring (LIKE)</h2>
-            <p>Оператор LIKE используется для поиска по шаблону в строках. Поддерживает подстановочные символы:</p>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><span class="sql-keyword">%</span> — любое количество символов (включая ноль)</li>
-                <li class="list-group-item"><span class="sql-keyword">_</span> — один символ</li>
-            </ul>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> name <span class="sql-keyword">LIKE</span> 'John%';</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> name <span class="sql-keyword">LIKE</span> '_ohn%';</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Total values. Aggregate functions (агрегатные функции)</h2>
-            <p>Функции, которые обрабатывают группы строк и возвращают одно значение:</p>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><span class="sql-keyword">COUNT()</span> — количество строк</li>
-                <li class="list-group-item"><span class="sql-keyword">SUM()</span> — сумма значений</li>
-                <li class="list-group-item"><span class="sql-keyword">AVG()</span> — среднее значение</li>
-                <li class="list-group-item"><span class="sql-keyword">MAX()</span> — максимальное значение</li>
-                <li class="list-group-item"><span class="sql-keyword">MIN()</span> — минимальное значение</li>
-            </ul>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT COUNT(*) FROM</span> employees;</li>
-                <li><span class="sql-keyword">SELECT SUM(salary) FROM</span> employees;</li>
-                <li><span class="sql-keyword">SELECT AVG(salary) FROM</span> employees;</li>
-                <li><span class="sql-keyword">SELECT MAX(salary) FROM</span> employees;</li>
-                <li><span class="sql-keyword">SELECT MIN(salary) FROM</span> employees;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Grouping data (группировка данных)</h2>
-            <p>Оператор GROUP BY используется для группировки строк по одному или нескольким столбцам. Обычно используется вместе с агрегатными функциями.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> department, <span class="sql-keyword">COUNT(*)</span> <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">GROUP BY</span> department;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Filtering data by totals (HAVING)</h2>
-            <p>HAVING используется для фильтрации групп, созданных с помощью GROUP BY. В отличие от WHERE, HAVING работает с агрегатными функциями.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> department, <span class="sql-keyword">COUNT(*)</span> <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">GROUP BY</span> department <span class="sql-keyword">HAVING COUNT(*) &gt; 10</span>;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Join operations (LEFT, RIGHT, FULL, INNER JOIN)</h2>
-            <p>JOIN используется для объединения строк из двух или более таблиц на основе связи между ними. Поддерживаются различные типы JOIN:</p>
-            <ul class="list-group list-group-flush mb-3">
-                <li class="list-group-item"><span class="sql-keyword">INNER JOIN</span> — возвращает только совпадающие строки</li>
-                <li class="list-group-item"><span class="sql-keyword">LEFT JOIN</span> — возвращает все строки из левой таблицы и совпадающие строки из правой</li>
-                <li class="list-group-item"><span class="sql-keyword">RIGHT JOIN</span> — возвращает все строки из правой таблицы и совпадающие строки из левой</li>
-                <li class="list-group-item"><span class="sql-keyword">FULL JOIN</span> — возвращает все строки из обеих таблиц</li>
-            </ul>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">INNER JOIN</span> departments <span class="sql-keyword">ON</span> employees.department_id = departments.id;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">LEFT JOIN</span> departments <span class="sql-keyword">ON</span> employees.department_id = departments.id;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">RIGHT JOIN</span> departments <span class="sql-keyword">ON</span> employees.department_id = departments.id;</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">FULL JOIN</span> departments <span class="sql-keyword">ON</span> employees.department_id = departments.id;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Subqueries (подзапросы)</h2>
-            <p>Подзапрос — это запрос, который используется в другом запросе. Он может быть использован в качестве условия WHERE, FROM или HAVING.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; (<span class="sql-keyword">SELECT AVG(salary) FROM</span> employees);</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> department_id <span class="sql-keyword">IN</span> (<span class="sql-keyword">SELECT</span> id <span class="sql-keyword">FROM</span> departments <span class="sql-keyword">WHERE</span> name = 'IT');</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary = (<span class="sql-keyword">SELECT MAX(salary) FROM</span> employees);</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>UNION (as opposed to JOIN)</h2>
-            <p>UNION объединяет результаты двух или более запросов в один набор строк. В отличие от JOIN, который расширяет строки по столбцам, UNION добавляет строки. JOIN — горизонтальное объединение (по строкам), UNION — вертикальное (по столбцам одинаковой структуры). </p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; 5000 <span class="sql-keyword">UNION</span> <span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &lt; 10000;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Checking for records (EXISTS)</h2>
-            <p>EXISTS используется для проверки наличия строк в подзапросе. Он возвращает true, если подзапрос возвращает хотя бы одну строку, и false в противном случае.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE EXISTS</span> (<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> departments <span class="sql-keyword">WHERE</span> employees.department_id = departments.id);</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Using the keywords SOME|ANY and ALL</h2>
-            <p>SOME и ANY используются для проверки условия для некоторых значений в наборе. ALL используется для проверки условия для всех значений в наборе.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; <span class="sql-keyword">ANY</span> (<span class="sql-keyword">SELECT</span> salary <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> department_id = 1);</li>
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; <span class="sql-keyword">ALL</span> (<span class="sql-keyword">SELECT</span> salary <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> department_id = 1);</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Subqueries in the FROM and SELECT clauses</h2>
-            <p>Подзапросы могут использоваться в качестве таблиц в запросе. Это позволяет использовать результаты одного запроса в другом.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> (<span class="sql-keyword">SELECT</span> * <span class="sql-keyword">FROM</span> employees <span class="sql-keyword">WHERE</span> salary &gt; 5000) <span class="sql-keyword">AS</span> employees_salary_gt_5000;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>CASE operator</h2>
-            <p>CASE используется для выполнения различных действий в зависимости от условия.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> name, salary, <br> <span class="sql-keyword">CASE WHEN</span> salary &gt; 5000 <span class="sql-keyword">THEN</span> 'High' <br> <span class="sql-keyword">ELSE</span> 'Low' <br> <span class="sql-keyword">END AS</span> salary_level <br> <span class="sql-keyword">FROM</span> employees;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>COALESCE() — замена простому CASE для NULL</h2>
-            <p>COALESCE используется для замены NULL на другое значение.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">SELECT</span> name, <span class="sql-keyword">COALESCE</span>(salary, 0) <span class="sql-keyword">AS</span> salary <span class="sql-keyword">FROM</span> employees;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Data definition language commands: CREATE/ALTER/DROP (TABLE, DB)</h2>
-            <p>CREATE, ALTER, DROP — команды для создания, изменения и удаления таблиц и баз данных.</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">CREATE TABLE</span> employees (id INT PRIMARY KEY, name VARCHAR(255), salary DECIMAL(10, 2));</li>
-                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">ADD COLUMN</span> department VARCHAR(255);</li>
-                <li><span class="sql-keyword">DROP TABLE</span> employees;</li>
-            </ul>
-        </div>
-        <div class="card mb-4 p-4 shadow-sm">
-            <h2>Data definition language commands: MODIFY COLUMN/DROP COLUMN/RENAME COLUMN (TABLE, DB)</h2>
-            <p>MODIFY, DROP, RENAME — команды для изменения и удаления столбцов из таблицы</p>
-            <p>Примеры:</p>
-            <ul class="mb-0">
-                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">MODIFY</span> name VARCHAR(255);</li>
-                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">DROP COLUMN</span>temp_notes;</li>
-                <li><span class="sql-keyword">ALTER TABLE</span> employees <span class="sql-keyword">RENAME COLUMN </span>name TO full_name;</li>
-            </ul>
-        </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Comparison predicates (предикаты сравнения)</h2>
+        <p>Это операторы, используемые в WHERE для сравнения значений:</p>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">
+            <span class="sql-keyword">=</span>,
+            <span class="sql-keyword">&lt;&gt;</span> или
+            <span class="sql-keyword">!=</span> — равно / не равно
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">&lt;</span>,
+            <span class="sql-keyword">&gt;</span>,
+            <span class="sql-keyword">&lt;=</span>,
+            <span class="sql-keyword">&gt;=</span> — меньше, больше и т.д.
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">IN</span> — проверка на вхождение в список
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">BETWEEN</span> — проверка диапазона
+            (включительно)
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">IS NULL</span> /
+            <span class="sql-keyword">IS NOT NULL</span> — проверка на пустое
+            значение
+          </li>
+        </ul>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary
+            <span class="sql-keyword">BETWEEN</span> 5000
+            <span class="sql-keyword">AND</span> 10000;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary
+            <span class="sql-keyword">IS NULL</span>;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Logical operators (логические операторы)</h2>
+        <p>Это операторы, используемые в WHERE для логических операций:</p>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">
+            <span class="sql-keyword">AND</span> — логическое И
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">OR</span> — логическое ИЛИ
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">NOT</span> — логическое НЕ
+          </li>
+        </ul>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000
+            <span class="sql-keyword">AND</span> salary &lt; 10000;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000
+            <span class="sql-keyword">OR</span> salary &lt; 10000;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE NOT</span> salary &gt; 5000;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Checking for substring (LIKE)</h2>
+        <p>
+          Оператор LIKE используется для поиска по шаблону в строках.
+          Поддерживает подстановочные символы:
+        </p>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">
+            <span class="sql-keyword">%</span> — любое количество символов
+            (включая ноль)
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">_</span> — один символ
+          </li>
+        </ul>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> name
+            <span class="sql-keyword">LIKE</span> 'John%';
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> name
+            <span class="sql-keyword">LIKE</span> '_ohn%';
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Total values. Aggregate functions (агрегатные функции)</h2>
+        <p>
+          Функции, которые обрабатывают группы строк и возвращают одно значение:
+        </p>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">
+            <span class="sql-keyword">COUNT()</span> — количество строк
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">SUM()</span> — сумма значений
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">AVG()</span> — среднее значение
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">MAX()</span> — максимальное значение
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">MIN()</span> — минимальное значение
+          </li>
+        </ul>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT COUNT(*) FROM</span> employees;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT SUM(salary) FROM</span> employees;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT AVG(salary) FROM</span> employees;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT MAX(salary) FROM</span> employees;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT MIN(salary) FROM</span> employees;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Grouping data (группировка данных)</h2>
+        <p>
+          Оператор GROUP BY используется для группировки строк по одному или
+          нескольким столбцам. Обычно используется вместе с агрегатными
+          функциями.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> department,
+            <span class="sql-keyword">COUNT(*)</span>
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">GROUP BY</span> department;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Filtering data by totals (HAVING)</h2>
+        <p>
+          HAVING используется для фильтрации групп, созданных с помощью GROUP
+          BY. В отличие от WHERE, HAVING работает с агрегатными функциями.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> department,
+            <span class="sql-keyword">COUNT(*)</span>
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">GROUP BY</span> department
+            <span class="sql-keyword">HAVING COUNT(*) &gt; 10</span>;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Join operations (LEFT, RIGHT, FULL, INNER JOIN)</h2>
+        <p>
+          JOIN используется для объединения строк из двух или более таблиц на
+          основе связи между ними. Поддерживаются различные типы JOIN:
+        </p>
+        <ul class="list-group list-group-flush mb-3">
+          <li class="list-group-item">
+            <span class="sql-keyword">INNER JOIN</span> — возвращает только
+            совпадающие строки
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">LEFT JOIN</span> — возвращает все строки
+            из левой таблицы и совпадающие строки из правой.Если соответствия
+            нет, возвращает NULL для всех столбцов правой таблицы.
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">RIGHT JOIN</span> — возвращает все строки
+            из правой таблицы и совпадающие строки из левой.Если соответствия
+            нет, возвращает NULL для всех столбцов левой таблицы.
+          </li>
+          <li class="list-group-item">
+            <span class="sql-keyword">FULL JOIN</span> — возвращает все строки
+            из обеих таблиц
+          </li>
+        </ul>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">INNER JOIN</span> departments
+            <span class="sql-keyword">ON</span> employees.department_id =
+            departments.id;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">LEFT JOIN</span> departments
+            <span class="sql-keyword">ON</span> employees.department_id =
+            departments.id;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">RIGHT JOIN</span> departments
+            <span class="sql-keyword">ON</span> employees.department_id =
+            departments.id;
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">FULL JOIN</span> departments
+            <span class="sql-keyword">ON</span> employees.department_id =
+            departments.id;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Subqueries (подзапросы)</h2>
+        <p>
+          Подзапрос — это запрос, который используется в другом запросе. Он
+          может быть использован в качестве условия WHERE, FROM или HAVING.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; (<span
+              class="sql-keyword"
+              >SELECT AVG(salary) FROM</span
+            >
+            employees);
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> department_id
+            <span class="sql-keyword">IN</span> (<span class="sql-keyword"
+              >SELECT</span
+            >
+            id <span class="sql-keyword">FROM</span> departments
+            <span class="sql-keyword">WHERE</span> name = 'IT');
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary = (<span
+              class="sql-keyword"
+              >SELECT MAX(salary) FROM</span
+            >
+            employees);
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>UNION (as opposed to JOIN)</h2>
+        <p>
+          UNION объединяет результаты двух или более запросов в один набор
+          строк. В отличие от JOIN, который расширяет строки по столбцам, UNION
+          добавляет строки. JOIN — горизонтальное объединение (по строкам),
+          UNION — вертикальное (по столбцам одинаковой структуры).
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000
+            <span class="sql-keyword">UNION</span>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &lt; 10000;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Checking for records (EXISTS)</h2>
+        <p>
+          EXISTS используется для проверки наличия строк в подзапросе. Он
+          возвращает true, если подзапрос возвращает хотя бы одну строку, и
+          false в противном случае.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE EXISTS</span> (<span
+              class="sql-keyword"
+              >SELECT</span
+            >
+            * <span class="sql-keyword">FROM</span> departments
+            <span class="sql-keyword">WHERE</span> employees.department_id =
+            departments.id);
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Using the keywords SOME|ANY and ALL</h2>
+        <p>
+          SOME и ANY используются для проверки условия для некоторых значений в
+          наборе. ALL используется для проверки условия для всех значений в
+          наборе.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt;
+            <span class="sql-keyword">ANY</span> (<span class="sql-keyword"
+              >SELECT</span
+            >
+            salary <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> department_id = 1);
+          </li>
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt;
+            <span class="sql-keyword">ALL</span> (<span class="sql-keyword"
+              >SELECT</span
+            >
+            salary <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> department_id = 1);
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>Subqueries in the FROM and SELECT clauses</h2>
+        <p>
+          Подзапросы могут использоваться в качестве таблиц в запросе. Это
+          позволяет использовать результаты одного запроса в другом.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> (<span class="sql-keyword"
+              >SELECT</span
+            >
+            * <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000)
+            <span class="sql-keyword">AS</span> employees_salary_gt_5000;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>CASE operator</h2>
+        <p>
+          CASE используется для выполнения различных действий в зависимости от
+          условия.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> name, salary, <br />
+            <span class="sql-keyword">CASE WHEN</span> salary &gt; 5000
+            <span class="sql-keyword">THEN</span> 'High' <br />
+            <span class="sql-keyword">ELSE</span> 'Low' <br />
+            <span class="sql-keyword">END AS</span> salary_level <br />
+            <span class="sql-keyword">FROM</span> employees;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>COALESCE() — замена простому CASE для NULL</h2>
+        <p>COALESCE используется для замены NULL на другое значение.</p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> name,
+            <span class="sql-keyword">COALESCE</span>(salary, 0)
+            <span class="sql-keyword">AS</span> salary
+            <span class="sql-keyword">FROM</span> employees;
+          </li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>
+          Data definition language commands: CREATE/ALTER/DROP (TABLE, DB)
+        </h2>
+        <p>
+          CREATE, ALTER, DROP — команды для создания, изменения и удаления
+          таблиц и баз данных.
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">CREATE TABLE</span> employees (id INT
+            PRIMARY KEY, name VARCHAR(255), salary DECIMAL(10, 2));
+          </li>
+          <li>
+            <span class="sql-keyword">ALTER TABLE</span> employees
+            <span class="sql-keyword">ADD COLUMN</span> department VARCHAR(255);
+          </li>
+          <li><span class="sql-keyword">DROP TABLE</span> employees;</li>
+        </ul>
+      </div>
+      <div class="card mb-4 p-4 shadow-sm">
+        <h2>
+          Data definition language commands: MODIFY COLUMN/DROP COLUMN/RENAME
+          COLUMN (TABLE, DB)
+        </h2>
+        <p>
+          MODIFY, DROP, RENAME — команды для изменения и удаления столбцов из
+          таблицы
+        </p>
+        <p>Примеры:</p>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">ALTER TABLE</span> employees
+            <span class="sql-keyword">MODIFY</span> name VARCHAR(255);
+          </li>
+          <li>
+            <span class="sql-keyword">ALTER TABLE</span> employees
+            <span class="sql-keyword">DROP COLUMN</span>temp_notes;
+          </li>
+          <li>
+            <span class="sql-keyword">ALTER TABLE</span> employees
+            <span class="sql-keyword">RENAME COLUMN </span>name TO full_name;
+          </li>
+        </ul>
+      </div>
     </div>
     <!-- Bootstrap JS (optional, for interactivity) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 </html>
