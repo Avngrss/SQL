@@ -462,6 +462,7 @@
           false в противном случае.
         </p>
         <p>Примеры:</p>
+        <h5>Проверка существования записей в связанной таблице</h5>
         <ul class="mb-0">
           <li>
             <span class="sql-keyword">SELECT</span> *
@@ -470,9 +471,23 @@
               class="sql-keyword"
               >SELECT</span
             >
-            * <span class="sql-keyword">FROM</span> departments
+            1 <span class="sql-keyword">FROM</span> departments
             <span class="sql-keyword">WHERE</span> employees.department_id =
             departments.id);
+          </li>
+        </ul>
+        <h5>Отрицание с NOT EXISTS</h5>
+        <ul class="mb-0">
+          <li>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> customers c
+            <span class="sql-keyword">WHERE NOT EXISTS</span> (<span
+              class="sql-keyword"
+              >SELECT</span
+            >
+            1 <span class="sql-keyword">FROM</span> orders o
+            <span class="sql-keyword">WHERE</span> o.customer_id =
+            c.customer_id);
           </li>
         </ul>
       </div>
