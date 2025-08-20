@@ -434,23 +434,21 @@
         </ul>
       </div>
       <div class="card mb-4 p-4 shadow-sm">
-        <h2>UNION (as opposed to JOIN)</h2>
+        <h2>Subqueries in the FROM and SELECT clauses</h2>
         <p>
-          UNION объединяет результаты двух или более запросов в один набор
-          строк. В отличие от JOIN, который расширяет строки по столбцам, UNION
-          добавляет строки. JOIN — горизонтальное объединение (по строкам),
-          UNION — вертикальное (по столбцам одинаковой структуры).
+          Подзапросы могут использоваться в качестве таблиц в запросе. Это
+          позволяет использовать результаты одного запроса в другом.
         </p>
         <p>Примеры:</p>
         <ul class="mb-0">
           <li>
             <span class="sql-keyword">SELECT</span> *
-            <span class="sql-keyword">FROM</span> employees
-            <span class="sql-keyword">WHERE</span> salary &gt; 5000
-            <span class="sql-keyword">UNION</span>
-            <span class="sql-keyword">SELECT</span> *
-            <span class="sql-keyword">FROM</span> employees
-            <span class="sql-keyword">WHERE</span> salary &lt; 10000;
+            <span class="sql-keyword">FROM</span> (<span class="sql-keyword"
+              >SELECT</span
+            >
+            * <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000)
+            <span class="sql-keyword">AS</span> employees_salary_gt_5000;
           </li>
         </ul>
       </div>
@@ -523,21 +521,23 @@
         </ul>
       </div>
       <div class="card mb-4 p-4 shadow-sm">
-        <h2>Subqueries in the FROM and SELECT clauses</h2>
+        <h2>UNION (as opposed to JOIN)</h2>
         <p>
-          Подзапросы могут использоваться в качестве таблиц в запросе. Это
-          позволяет использовать результаты одного запроса в другом.
+          UNION объединяет результаты двух или более запросов в один набор
+          строк. В отличие от JOIN, который расширяет строки по столбцам, UNION
+          добавляет строки. JOIN — горизонтальное объединение (по строкам),
+          UNION — вертикальное (по столбцам одинаковой структуры).
         </p>
         <p>Примеры:</p>
         <ul class="mb-0">
           <li>
             <span class="sql-keyword">SELECT</span> *
-            <span class="sql-keyword">FROM</span> (<span class="sql-keyword"
-              >SELECT</span
-            >
-            * <span class="sql-keyword">FROM</span> employees
-            <span class="sql-keyword">WHERE</span> salary &gt; 5000)
-            <span class="sql-keyword">AS</span> employees_salary_gt_5000;
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &gt; 5000
+            <span class="sql-keyword">UNION</span>
+            <span class="sql-keyword">SELECT</span> *
+            <span class="sql-keyword">FROM</span> employees
+            <span class="sql-keyword">WHERE</span> salary &lt; 10000;
           </li>
         </ul>
       </div>
